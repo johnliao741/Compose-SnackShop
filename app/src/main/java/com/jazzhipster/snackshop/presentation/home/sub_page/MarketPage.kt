@@ -2,6 +2,7 @@ package com.jazzhipster.snackshop.presentation.home.sub_page
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
@@ -27,10 +28,11 @@ import com.jazzhipster.snackshop.R
 
 import com.jazzhipster.snackshop.presentation.common.ShowView
 import com.jazzhipster.snackshop.presentation.common.SnackCard
+import com.jazzhipster.snackshop.ui.theme.LighterGray
 
 
 @Composable
-fun MarketPage(modifier: Modifier,viewModel: MarketViewModel = hiltViewModel()){
+fun MarketPage(modifier: Modifier,viewModel: MarketViewModel = hiltViewModel(),searchAction:()->Unit){
     LaunchedEffect(key1 = true){
         viewModel.getData()
     }
@@ -47,9 +49,9 @@ fun MarketPage(modifier: Modifier,viewModel: MarketViewModel = hiltViewModel()){
                         .fillMaxWidth()
                         .aspectRatio(9.9444f)
                         .background(
-                            Color.LightGray
-                        )
-                        .padding(horizontal = 16.dp),
+                            LighterGray
+                        ).padding(horizontal = 16.dp)
+                        .clickable { searchAction() },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     var search by remember {
@@ -65,6 +67,7 @@ fun MarketPage(modifier: Modifier,viewModel: MarketViewModel = hiltViewModel()){
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                         maxLines = 1,
                         visualTransformation = VisualTransformation.None,
+                        enabled = false
                     )
                 }
             }

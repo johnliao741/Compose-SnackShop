@@ -13,8 +13,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -45,8 +48,10 @@ fun SnackCard(data: SnackCardItem, modifier: Modifier = Modifier.fillMaxWidth())
         when (data.type) {
             SnackCardItemType.RowMaskRectangle -> {
                 HorizontalScrollView(modifier, data, true) { snackItem ->
-                    MaskImageCard(modifier.width(240.dp)
-                        .aspectRatio(2f), snackItem)
+                    MaskImageCard(
+                        modifier
+                            .width(240.dp)
+                            .aspectRatio(2f), snackItem)
                 }
 
             }
@@ -219,16 +224,31 @@ fun ImageTextSnackCard(type: SnackCardItemType, modifier: Modifier, snackItem: S
 }
 
 @Composable
-fun IconText(iconRes: Int, text: String) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            painter = painterResource(id = iconRes), contentDescription = "rating",
-            modifier = Modifier
-                .width(12.dp)
-                .aspectRatio(1f)
-        )
-        Spacer(modifier = Modifier.width(3.dp))
-        Text(text = text)
+fun IconText(
+    iconRes: Int? = null,
+    text: String? = null,
+    annotationText :AnnotatedString? = null,
+    parentModifier :Modifier = Modifier.wrapContentWidth(),
+    iconSize : Dp = 12.dp,
+    textColor:Color = Color.Black,
+    fontSize :TextUnit = 12.sp
+) {
+    Row(modifier = parentModifier, verticalAlignment = Alignment.CenterVertically) {
+        if(iconRes != null){
+            Image(
+                painter = painterResource(id = iconRes), contentDescription = "rating",
+                modifier = Modifier
+                    .width(iconSize)
+                    .aspectRatio(1f)
+            )
+            Spacer(modifier = Modifier.width(3.dp))
+        }
+        text?.run {
+            Text(text, color = textColor, fontSize = fontSize)
+        }
+        annotationText?.run {
+            Text(text = annotationText)
+        }
     }
 }
 

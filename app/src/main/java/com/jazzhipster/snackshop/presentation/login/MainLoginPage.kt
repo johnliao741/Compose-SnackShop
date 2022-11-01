@@ -25,10 +25,12 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 
 import com.jazzhipster.snackshop.R
+import com.jazzhipster.snackshop.presentation.common.VerticalLine
 import com.jazzhipster.snackshop.presentation.login.type.LoginType
 import com.jazzhipster.snackshop.presentation.login.type.SocialLogin
 import com.jazzhipster.snackshop.presentation.login.type.SocialLogin.*
 import com.jazzhipster.snackshop.ui.theme.Blue
+import com.jazzhipster.snackshop.ui.theme.LighterGray
 
 @Composable
 fun MainLoginPage(
@@ -94,16 +96,14 @@ fun MainLoginPage(
                     bottom.linkTo(line.top, 16.dp)
                 }
         )
-        Box(modifier = Modifier
-            .padding(horizontal = 80.dp, vertical = 12.dp)
-            .fillMaxWidth()
-            .height(1.dp)
+        VerticalLine(modifier = Modifier.padding(horizontal = 80.dp, vertical = 12.dp)
             .background(Color.White)
             .alpha(0.3f)
             .constrainAs(line) {
                 bottom.linkTo(emailBtn.top, 16.dp)
             }
-        )
+            .fillMaxWidth())
+
         TextButton(
             onClick = { navAction(LoginType.Email)},
             modifier = Modifier

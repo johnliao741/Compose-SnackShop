@@ -1,5 +1,6 @@
 package com.jazzhipster.snackshop.remote.mock
 
+import android.util.Log
 import com.jazzhipster.snackshop.remote.model.*
 import com.jazzhipster.snackshop.remote.service.SnackShopService
 import com.jazzhipster.snackshop.remote.type.SnackCardItemType
@@ -63,7 +64,7 @@ class SnackShopServiceImp() : SnackShopService {
                                     "https://purepng.com/public/uploads/thumbnail//popcorn-in-jar-s8o.png",
                                     "https://static.vecteezy.com/system/resources/thumbnails/012/627/666/small/3d-popcorn-striped-bucket-cinema-snack-movie-entertainment-concept-high-quality-isolated-3d-render-png.png",
 
-                                ),
+                                    ),
                                 maskText = null
                             )
                         }
@@ -184,6 +185,37 @@ class SnackShopServiceImp() : SnackShopService {
                         }
                     ),
                 )
+            )
+        }
+
+    override suspend fun getSearchList(request: GetSearchRequest): GetSearchListResponse =
+        withContext(Dispatchers.IO) {
+            delay(500)
+            Log.e("search", request.query)
+            GetSearchListResponse(
+                recentSearches = listOf("Afternoon tea", "Potato chips", "Milk jelly"),
+                suggests = when{
+                    request.query.isEmpty()->{
+                        listOf(
+                            "Fruit jelly",
+                            "Simit lovers",
+                            "Japanese street food",
+                            "Turkish tea time bundle",
+                            "Delicious samosa bundle"
+                        )
+                    }
+                    else->{
+                        val format = Regex("[0-9a-z]+")
+                        if(format.matches(request.query)){
+                            List(10) {
+                                "search ${request.query} -> result : ${it + 1}"
+                            }
+                        }else{
+                            listOf()
+                        }
+                    }
+                },
+                type = if (request.query.isEmpty()) SearchResultType.DEFAULT else SearchResultType.SEARCH
             )
         }
 

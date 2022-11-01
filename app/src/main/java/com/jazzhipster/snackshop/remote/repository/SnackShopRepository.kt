@@ -1,9 +1,6 @@
 package com.jazzhipster.snackshop.remote.repository
 
-import com.jazzhipster.snackshop.remote.model.BaseRequest
-import com.jazzhipster.snackshop.remote.model.GetSubHomeListRequest
-import com.jazzhipster.snackshop.remote.model.GetListResponse
-import com.jazzhipster.snackshop.remote.model.GetSubHomeTitleResponse
+import com.jazzhipster.snackshop.remote.model.*
 import com.jazzhipster.snackshop.remote.service.SnackShopService
 import javax.inject.Inject
 
@@ -18,6 +15,10 @@ class SnackShopRepository @Inject constructor(val snackShopService: SnackShopSer
 
     suspend fun getMarketList(request: BaseRequest):GetListResponse{
         return snackShopService.getMarketList(request)
+    }
+
+    suspend fun getSearchList(request: GetSearchRequest):GetSearchListResponse{
+        return snackShopService.getSearchList(request)
     }
 
 }

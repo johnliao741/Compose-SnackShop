@@ -1,9 +1,6 @@
 package com.jazzhipster.snackshop.remote.service
 
-import com.jazzhipster.snackshop.remote.model.BaseRequest
-import com.jazzhipster.snackshop.remote.model.GetSubHomeListRequest
-import com.jazzhipster.snackshop.remote.model.GetListResponse
-import com.jazzhipster.snackshop.remote.model.GetSubHomeTitleResponse
+import com.jazzhipster.snackshop.remote.model.*
 
 interface SnackShopService {
 
@@ -12,4 +9,6 @@ interface SnackShopService {
     suspend fun getSubHomeList(request: GetSubHomeListRequest):GetListResponse
 
     suspend fun getMarketList(request: BaseRequest):GetListResponse
+
+    suspend fun getSearchList(request: GetSearchRequest):GetSearchListResponse
 }

@@ -34,12 +34,15 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.jazzhipster.snackshop.R
 import com.jazzhipster.snackshop.presentation.common.MyTextButton
+import com.jazzhipster.snackshop.presentation.common.VerticalLine
 import com.jazzhipster.snackshop.ui.theme.Gray
 
 @Composable
 fun EmailLoginPage(
     navAction: () -> Unit,
-    modifier: Modifier = Modifier.fillMaxSize().background(Color.White)
+    modifier: Modifier = Modifier
+        .fillMaxSize()
+        .background(Color.White)
 ) {
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
@@ -60,12 +63,13 @@ fun EmailLoginPage(
             fontSize = 34.sp,
             fontWeight = FontWeight.Bold,
             color = Gray,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .constrainAs(welcomeText) {
-                top.linkTo(icon.bottom)
-                bottom.linkTo(emailTextField.top)
-            }
+                    top.linkTo(icon.bottom)
+                    bottom.linkTo(emailTextField.top)
+                }
         )
         LoginTextField(
             iconRes = R.mipmap.email,
@@ -94,10 +98,9 @@ fun EmailLoginPage(
                     bottom.linkTo(line.top)
                 }
         )
-        Box(modifier = Modifier
+        VerticalLine(modifier = Modifier
             .padding(horizontal = 64.dp)
             .fillMaxWidth()
-            .height(1.dp)
             .background(Color.Gray)
             .alpha(0.3f)
             .constrainAs(line) {
@@ -105,31 +108,34 @@ fun EmailLoginPage(
                 bottom.linkTo(signUpBtn.top)
             }
         )
+
         MyTextButton(
             navAction = { navAction() },
             modifier = Modifier
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .fillMaxWidth()
-                .constrainAs(signUpBtn){
-                 top.linkTo(line.bottom)
-                bottom.linkTo(privacyPolicy.top)
-            },
+                .constrainAs(signUpBtn) {
+                    top.linkTo(line.bottom)
+                    bottom.linkTo(privacyPolicy.top)
+                },
             text = "Create account",
             textColor = Color.White
         )
 
-        AnnotatedClickableText(modifier = Modifier.constrainAs(privacyPolicy){
+        AnnotatedClickableText(modifier = Modifier.constrainAs(privacyPolicy) {
             top.linkTo(signUpBtn.bottom)
-            bottom.linkTo(parent.bottom,114.dp)
+            bottom.linkTo(parent.bottom, 114.dp)
         })
     }
 
 }
+
 @Preview
 @Composable
-fun PreviewEmailLoginPage(){
+fun PreviewEmailLoginPage() {
     EmailLoginPage(navAction = { })
 }
+
 @Composable
 fun LoginTextField(
     iconRes: Int?,
@@ -207,26 +213,36 @@ fun LoginTextField(
 @Composable
 fun AnnotatedClickableText(
     modifier: Modifier,
-    fontSize:TextUnit = 12.sp
+    fontSize: TextUnit = 12.sp
 ) {
     val annotatedText = buildAnnotatedString {
         append("By clicking \"Create account\", I agree to SnackOverflow’s  and Privacy Policy.")
 
         // We attach this *URL* annotation to the following content
         // until `pop()` is called
-        pushStringAnnotation(tag = "TOS",
-            annotation = "https://developer.android.com")
-        withStyle(style = SpanStyle(color = Color.Blue,
-            fontWeight = FontWeight.Bold)
+        pushStringAnnotation(
+            tag = "TOS",
+            annotation = "https://developer.android.com"
+        )
+        withStyle(
+            style = SpanStyle(
+                color = Color.Blue,
+                fontWeight = FontWeight.Bold
+            )
         ) {
             append("TOS")
         }
         pop()
         append(" and ")
-        pushStringAnnotation(tag = "Privacy Policy",
-            annotation = "https://developer.android.com")
-        withStyle(style = SpanStyle(color = Color.Blue,
-            fontWeight = FontWeight.Bold)
+        pushStringAnnotation(
+            tag = "Privacy Policy",
+            annotation = "https://developer.android.com"
+        )
+        withStyle(
+            style = SpanStyle(
+                color = Color.Blue,
+                fontWeight = FontWeight.Bold
+            )
         ) {
             append("Privacy Policy")
         }
@@ -241,14 +257,18 @@ fun AnnotatedClickableText(
         onClick = { offset ->
             // We check if there is an *URL* annotation attached to the text
             // at the clicked position
-            annotatedText.getStringAnnotations(tag = "TOS", start = offset,
-                end = offset)
+            annotatedText.getStringAnnotations(
+                tag = "TOS", start = offset,
+                end = offset
+            )
                 .firstOrNull()?.let { annotation ->
                     // If yes, we log its value
                     Log.d("Clicked TOS", annotation.item)
                 }
-            annotatedText.getStringAnnotations(tag = "Privacy Policy", start = offset,
-                end = offset)
+            annotatedText.getStringAnnotations(
+                tag = "Privacy Policy", start = offset,
+                end = offset
+            )
                 .firstOrNull()?.let { annotation ->
                     // If yes, we log its value
                     Log.d("Clicked Privacy Policy", annotation.item)
