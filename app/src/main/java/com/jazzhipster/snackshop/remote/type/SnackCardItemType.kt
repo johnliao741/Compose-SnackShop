@@ -5,5 +5,6 @@ enum class SnackCardItemType(val type:Int) {
     RowSquare(1),
     RowRectangle(2),
     RowSquareGallery(3),
-    ColumnMaskRectangle(4)
+    ColumnMaskRectangle(4),
+    ColumnSquareGallery(5)
 }

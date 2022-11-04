@@ -11,4 +11,6 @@ interface SnackShopService {
     suspend fun getMarketList(request: BaseRequest):GetListResponse
 
     suspend fun getSearchList(request: GetSearchRequest):GetSearchListResponse
+
+    suspend fun getSnackDetail(request: GetSnackDetailRequest):GetSnackDetailResponse
 }

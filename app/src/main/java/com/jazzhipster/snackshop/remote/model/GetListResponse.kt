@@ -19,18 +19,21 @@ class SnackCardItem(
 class SnackItem(
     val id:Int,
     val name:String,
+    val price:Double,
+    val description:String,
     val rating:Double,
     val timestamp:Long,
     val urls:List<String>,
     val maskText:String?
 
 ){
-    fun beforeTime():String{
-        val now = Date().time
-        val period = now - timestamp
-        return when{
-            period in 60*1000..60*60*1000 -> "${(period/60/1000).toInt()}m"
-            else-> "1m"
-        }
+
+}
+fun Long.beforeTime():String{
+    val now = Date().time
+    val period = now - this
+    return when{
+        period in 60*1000..60*60*1000 -> "${(period/60/1000).toInt()}m"
+        else-> "1m"
     }
 }

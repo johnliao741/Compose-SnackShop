@@ -24,13 +24,20 @@ import coil.compose.AsyncImage
 import com.jazzhipster.snackshop.R
 import com.jazzhipster.snackshop.remote.model.SnackCardItem
 import com.jazzhipster.snackshop.remote.model.SnackItem
+import com.jazzhipster.snackshop.remote.model.beforeTime
 import com.jazzhipster.snackshop.remote.type.SnackCardItemType
+import com.jazzhipster.snackshop.ui.theme.Gray
+import com.jazzhipster.snackshop.ui.theme.LightGray
 import com.jazzhipster.snackshop.ui.theme.Mask
 import java.util.*
 import kotlin.random.Random
 
 @Composable
-fun SnackCard(data: SnackCardItem, modifier: Modifier = Modifier.fillMaxWidth()) {
+fun SnackCard(
+    data: SnackCardItem,
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    clickAction: (String) -> Unit
+) {
     Column(modifier = modifier.wrapContentHeight()) {
         Row(
             modifier = modifier
@@ -51,7 +58,10 @@ fun SnackCard(data: SnackCardItem, modifier: Modifier = Modifier.fillMaxWidth())
                     MaskImageCard(
                         modifier
                             .width(240.dp)
-                            .aspectRatio(2f), snackItem)
+                            .aspectRatio(2f), snackItem
+                    ) {
+                        clickAction(it)
+                    }
                 }
 
             }
@@ -61,7 +71,9 @@ fun SnackCard(data: SnackCardItem, modifier: Modifier = Modifier.fillMaxWidth())
                         data.type,
                         modifier = modifier.width(120.dp),
                         snackItem = snackItem
-                    )
+                    ) {
+                        clickAction(it)
+                    }
                 }
 
             }
@@ -71,13 +83,18 @@ fun SnackCard(data: SnackCardItem, modifier: Modifier = Modifier.fillMaxWidth())
                         data.type,
                         modifier = modifier.width(240.dp),
                         snackItem = snackItem
-                    )
+                    ) {
+                        clickAction(it)
+                    }
                 }
 
             }
             SnackCardItemType.RowSquareGallery -> {
                 HorizontalScrollView(modifier, data, true) { snackItem ->
-                    SeasonalSnackCard(modifier = modifier.width(120.dp), snackItem = snackItem)
+                    SeasonalSnackCard(modifier = modifier.width(120.dp),
+                        snackItem = snackItem) {
+                        clickAction(it)
+                    }
                 }
             }
             SnackCardItemType.ColumnMaskRectangle -> {
@@ -88,7 +105,16 @@ fun SnackCard(data: SnackCardItem, modifier: Modifier = Modifier.fillMaxWidth())
                             .width(240.dp)
                             .aspectRatio(2.98333f),
                         snackItem = snackItem
-                    )
+                    ) {
+                        clickAction(it)
+                    }
+                }
+            }
+            SnackCardItemType.ColumnSquareGallery->{
+                VerticalScrollView(modifier, data, false) { snackItem ->
+                    SquareArticleSnackCard(modifier = modifier, snackItem = snackItem){
+                        clickAction(it)
+                    }
                 }
             }
         }
@@ -143,10 +169,11 @@ fun VerticalScrollView(
 }
 
 @Composable
-fun MaskImageCard(modifier: Modifier, snackItem: SnackItem) {
+fun MaskImageCard(modifier: Modifier, snackItem: SnackItem, clickAction: (String) -> Unit) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(6.dp))
+            .clickable { clickAction(snackItem.id.toString()) }
     ) {
         AsyncImage(
             model = snackItem.urls[Random.nextInt(snackItem.urls.size)],
@@ -181,15 +208,24 @@ fun MaskImageCard(modifier: Modifier, snackItem: SnackItem) {
 fun PreviewMaskImageCard() {
     MaskImageCard(
         Modifier.fillMaxWidth(),
-        SnackItem(0, "snack", 5.0, Date().time, listOf(), "Question 1")
-    )
+        SnackItem(0, "snack",5.0,"description", 5.0, Date().time, listOf(), "Question 1")
+    ){
+
+    }
 }
 
 @Composable
-fun ImageTextSnackCard(type: SnackCardItemType, modifier: Modifier, snackItem: SnackItem) {
+fun ImageTextSnackCard(
+    type: SnackCardItemType,
+    modifier: Modifier,
+    snackItem: SnackItem,
+    clickAction: (String) -> Unit
+) {
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .clickable { clickAction(snackItem.id.toString()) },
         horizontalAlignment = Alignment.Start,
+
     ) {
         AsyncImage(
             model = snackItem.urls[Random.nextInt(snackItem.urls.size)],
@@ -218,7 +254,7 @@ fun ImageTextSnackCard(type: SnackCardItemType, modifier: Modifier, snackItem: S
         )
         Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             IconText(R.mipmap.rating, snackItem.rating.toString())
-            IconText(R.mipmap.time, snackItem.beforeTime())
+            IconText(R.mipmap.time, snackItem.timestamp.beforeTime())
         }
     }
 }
@@ -227,14 +263,14 @@ fun ImageTextSnackCard(type: SnackCardItemType, modifier: Modifier, snackItem: S
 fun IconText(
     iconRes: Int? = null,
     text: String? = null,
-    annotationText :AnnotatedString? = null,
-    parentModifier :Modifier = Modifier.wrapContentWidth(),
-    iconSize : Dp = 12.dp,
-    textColor:Color = Color.Black,
-    fontSize :TextUnit = 12.sp
+    annotationText: AnnotatedString? = null,
+    parentModifier: Modifier = Modifier.wrapContentWidth(),
+    iconSize: Dp = 12.dp,
+    textColor: Color = Color.Black,
+    fontSize: TextUnit = 12.sp
 ) {
     Row(modifier = parentModifier, verticalAlignment = Alignment.CenterVertically) {
-        if(iconRes != null){
+        if (iconRes != null) {
             Image(
                 painter = painterResource(id = iconRes), contentDescription = "rating",
                 modifier = Modifier
@@ -253,23 +289,78 @@ fun IconText(
 }
 
 @Composable
-fun SeasonalSnackCard(modifier: Modifier, snackItem: SnackItem) {
+fun SeasonalSnackCard(modifier: Modifier, snackItem: SnackItem, clickAction: (String) -> Unit) {
     Column(
-        modifier = modifier.wrapContentHeight(),
+        modifier = modifier
+            .wrapContentHeight()
+            .clickable { clickAction(snackItem.id.toString()) },
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        SeasonalSnackGallery(snackItem)
+        SeasonalSnackGallery(Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f)
+            .background(Color.Cyan, RoundedCornerShape(8.dp)),
+            snackItem)
         Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             IconText(R.mipmap.rating, snackItem.rating.toString())
-            IconText(R.mipmap.time, snackItem.beforeTime())
+            IconText(R.mipmap.time, snackItem.timestamp.beforeTime())
+        }
+    }
+}
+@Composable
+fun SquareArticleSnackCard(modifier: Modifier,snackItem: SnackItem,clickAction: (String) -> Unit){
+    Row(
+        modifier = modifier
+            .wrapContentHeight()
+            .clickable { clickAction(snackItem.id.toString()) },
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        SeasonalSnackGallery(Modifier
+            .width(120.dp)
+            .aspectRatio(1f)
+            .background(Color.Cyan, RoundedCornerShape(8.dp)),snackItem)
+        Column {
+            Text(
+                "${snackItem.name}",
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                color = Gray
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                "${snackItem.description}",
+                fontSize = 15.sp,
+                color = LightGray
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                "$${snackItem.price}",
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                color = Gray
+            )
+            Row {
+                IconText(
+                    iconRes = R.mipmap.rating,
+                    text = snackItem.rating.toString(),
+                    textColor = LightGray
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                IconText(
+                    iconRes = R.mipmap.time,
+                    text = snackItem.timestamp.beforeTime(),
+                    textColor = LightGray
+                )
+            }
         }
     }
 }
 
 @Composable
-fun SeasonalSnackGallery(snackItem: SnackItem) {
+fun SeasonalSnackGallery(modifier: Modifier,snackItem: SnackItem) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .aspectRatio(1f)
             .background(Color.Cyan, RoundedCornerShape(8.dp))

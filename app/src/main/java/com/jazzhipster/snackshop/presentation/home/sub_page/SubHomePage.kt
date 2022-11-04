@@ -26,7 +26,7 @@ import com.jazzhipster.snackshop.remote.model.GetSubHomeTitleResponse
 import kotlin.random.Random
 
 @Composable
-fun SubHomePage(modifier: Modifier, viewModel: SubHomeViewModel = hiltViewModel()) {
+fun SubHomePage(modifier: Modifier, viewModel: SubHomeViewModel = hiltViewModel(),clickAction:(String)->Unit) {
     LaunchedEffect(key1 = true) {
         viewModel.getData()
     }
@@ -45,7 +45,7 @@ fun SubHomePage(modifier: Modifier, viewModel: SubHomeViewModel = hiltViewModel(
             val contentData = data.second
             contentData.category.forEach { subHomeItem ->
                 item {
-                    SnackCard(data = subHomeItem, modifier = Modifier.fillMaxWidth())
+                    SnackCard(data = subHomeItem, modifier = Modifier.fillMaxWidth(), clickAction = clickAction)
                 }
             }
             item {

@@ -32,7 +32,10 @@ import com.jazzhipster.snackshop.ui.theme.LighterGray
 
 
 @Composable
-fun MarketPage(modifier: Modifier,viewModel: MarketViewModel = hiltViewModel(),searchAction:()->Unit){
+fun MarketPage(modifier: Modifier,
+               viewModel: MarketViewModel = hiltViewModel(),
+               clickAction:(String) ->Unit,
+               searchAction:()->Unit){
     LaunchedEffect(key1 = true){
         viewModel.getData()
     }
@@ -77,7 +80,7 @@ fun MarketPage(modifier: Modifier,viewModel: MarketViewModel = hiltViewModel(),s
                 .fillMaxSize()){
                 data.category.forEach{item->
                     item {
-                        SnackCard(data = item)
+                        SnackCard(data = item,clickAction = clickAction)
                     }
                 }
             }

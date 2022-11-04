@@ -34,6 +34,8 @@ class SnackShopServiceImp() : SnackShopService {
                             SnackItem(
                                 id = it,
                                 name = "Snack $it",
+                                price = Random.nextDouble(100.0),
+                                description = "",
                                 rating = Random.nextDouble(5.1).run {
                                     ((this * 100).roundToInt() / 100).toDouble()
                                 },
@@ -55,6 +57,8 @@ class SnackShopServiceImp() : SnackShopService {
                             SnackItem(
                                 id = it,
                                 name = "Dessert $it",
+                                price = Random.nextDouble(100.0),
+                                description = "",
                                 rating = Random.nextDouble(5.1).run {
                                     ((this * 100).roundToInt() / 100).toDouble()
                                 },
@@ -76,6 +80,8 @@ class SnackShopServiceImp() : SnackShopService {
                             SnackItem(
                                 id = it,
                                 name = "Recommended food $it",
+                                price = Random.nextDouble(100.0),
+                                description = "",
                                 rating = Random.nextDouble(5.1).run {
                                     ((this * 100).roundToInt() / 100).toDouble()
                                 },
@@ -97,6 +103,8 @@ class SnackShopServiceImp() : SnackShopService {
                             SnackItem(
                                 id = it,
                                 name = "seasonal food $it",
+                                price = Random.nextDouble(100.0),
+                                description = "",
                                 rating = Random.nextDouble(5.1).run {
                                     ((this * 100).roundToInt() / 100).toDouble()
                                 },
@@ -128,9 +136,9 @@ class SnackShopServiceImp() : SnackShopService {
                             SnackItem(
                                 id = it,
                                 name = "Snack $it",
-                                rating = Random.nextDouble(5.1).run {
-                                    ((this * 100).roundToInt() / 100).toDouble()
-                                },
+                                price = Random.nextDouble(100.0),
+                                description = "",
+                                rating = Random.nextDouble(5.1).getDigit(2),
                                 timestamp = Date().time - Random.nextLong(3600000),
                                 urls = listOf(
                                     "https://w7.pngwing.com/pngs/965/299/png-transparent-ice-cream-creme-caramel-frutti-di-bosco-cheesecake-dessert-assorted-desserts-cream-frutti-di-bosco-food-thumbnail.png",
@@ -149,9 +157,9 @@ class SnackShopServiceImp() : SnackShopService {
                             SnackItem(
                                 id = it,
                                 name = "Dessert $it",
-                                rating = Random.nextDouble(5.1).run {
-                                    ((this * 100).roundToInt() / 100).toDouble()
-                                },
+                                price = Random.nextDouble(100.0),
+                                description = "",
+                                rating = Random.nextDouble(5.1).getDigit(2),
                                 timestamp = Date().time - Random.nextLong(3600000),
                                 urls = listOf(
                                     "https://image.shutterstock.com/image-photo/savory-party-snack-selection-white-260nw-185699627.jpg",
@@ -170,9 +178,9 @@ class SnackShopServiceImp() : SnackShopService {
                             SnackItem(
                                 id = it,
                                 name = "Recommended food $it",
-                                rating = Random.nextDouble(5.1).run {
-                                    ((this * 100).roundToInt() / 100).toDouble()
-                                },
+                                price = Random.nextDouble(100.0),
+                                description = "",
+                                rating = Random.nextDouble(5.1).getDigit(2),
                                 timestamp = Date().time - Random.nextLong(3600000),
                                 urls = listOf(
                                     "https://png.pngtree.com/png-clipart/20190911/ourmid/pngtree-group-of-almonds-and-cashew-nuts-png-background-png-image_1729179.jpg",
@@ -219,5 +227,43 @@ class SnackShopServiceImp() : SnackShopService {
             )
         }
 
+    override suspend fun getSnackDetail(request: GetSnackDetailRequest): GetSnackDetailResponse =
+        withContext(Dispatchers.IO){
+            delay(500)
+            GetSnackDetailResponse(
+                img = "https://w7.pngwing.com/pngs/174/372/png-transparent-hazelnut-nut-dried-fruit-food-thumbnail.png",
+                price = Random.nextDouble(11.0).getDigit(2),
+                time = Date().time - Random.nextInt(3600000),
+                rating = Random.nextDouble(5.0).getDigit(1),
+                description = "Baklava is a layered pastry dessert made of filo pastry, filled with chopped nuts, and sweetened with syrup or honey. It was one of the most popular sweet pastries of Ottoman cuisine.",
+                recommended = SnackCardItem(
+                    type = SnackCardItemType.ColumnSquareGallery,
+                    title = "Find it in a bundle",
+                    display = List(1) {
+                        SnackItem(
+                            id = it,
+                            name = "Snack $it",
+                            price = Random.nextDouble(100.0).getDigit(2),
+                            description = "Authentic Turkish tea and snack bundle",
+                            rating = Random.nextDouble(5.1).getDigit(1),
+                            timestamp = Date().time - Random.nextLong(3600000),
+                            urls = listOf(
+                                "https://w7.pngwing.com/pngs/965/299/png-transparent-ice-cream-creme-caramel-frutti-di-bosco-cheesecake-dessert-assorted-desserts-cream-frutti-di-bosco-food-thumbnail.png",
+                                "https://w7.pngwing.com/pngs/499/680/png-transparent-brown-and-pink-cupcake-with-strawberry-dessert-watercolor-painting-drawing-illustration-hand-painted-dessert-cake-cream-frutti-di-bosco-painted.png",
+                                "https://e7.pngegg.com/pngimages/879/358/png-clipart-panna-cotta-italian-cuisine-dessert-cream-creme-caramel-dessert-frutti-di-bosco-food.png",
+                                "https://www.pngall.com/wp-content/uploads/7/Dessert-PNG-Photo.png"
+                            ),
+                            maskText = "Question : ${it + 1}"
+                        )
+                    }
+                )
+            )
+        }
 
+    fun Double.getDigit(digit:Int):Double{
+        val num = Math.pow(10.0,digit.toDouble())
+        return this.run {
+            ((this * num).roundToInt() / num)
+        }
+    }
 }

@@ -21,4 +21,8 @@ class SnackShopRepository @Inject constructor(val snackShopService: SnackShopSer
         return snackShopService.getSearchList(request)
     }
 
+    suspend fun getSnackDetail(request:GetSnackDetailRequest):GetSnackDetailResponse{
+        return snackShopService.getSnackDetail(request)
+    }
+
 }

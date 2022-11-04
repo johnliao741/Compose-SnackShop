@@ -27,6 +27,7 @@ object HomeDestination {
     const val SUBHOME_PAGE_ROUTE = "subhome_page_route"
     const val MARKET_PAGE_ROUTE = "market_page_route"
     const val SEARCH_PAGE_ROUTE = "search_page_route"
+
     const val CREATE_PAGE_ROUTE = "create_page_route"
     const val WISHLIST_PAGE_ROUTE = "wishlist_page_route"
     const val ACCOUNT_PAGE_ROUTE = "account_page_route"
@@ -42,7 +43,7 @@ enum class HomeBottomBarItems(val destination: String, val iconRes: Int, val dis
 
 @Composable
 fun HomePage(
-    navAction: () -> Unit
+    parentNavigation:NavController
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -55,7 +56,12 @@ fun HomePage(
 
                 HomeBottomBarItems.values().forEach { tab ->
                     val isSelected =
-                        currentDestination?.hierarchy?.any { it.route == tab.destination || isSearchPageOnMarketPage(it.route,tab.destination) } == true
+                        currentDestination?.hierarchy?.any {
+                            it.route == tab.destination || isSearchPageOnMarketPage(
+                                it.route,
+                                tab.destination
+                            )
+                        } == true
                     BottomNavigationItem(
                         icon = {
                             Icon(
@@ -90,7 +96,12 @@ fun HomePage(
             startDestination = HomeBottomBarItems.SubHome.destination,
             Modifier.padding(innerPadding)
         ) {
-            composable(HomeBottomBarItems.SubHome.destination) { SubHomePage(modifier) }
+            composable(HomeBottomBarItems.SubHome.destination) {
+                SubHomePage(modifier, clickAction = { snackId ->
+                    parentNavigation.navigate("${Destinations.SNACK_DETAIL_PAGE_ROUTE}/$snackId")
+                }
+                )
+            }
             composable(SEARCH_PAGE_ROUTE) {
 
                 SearchPage(modifier, backAction = {
@@ -98,7 +109,9 @@ fun HomePage(
                 })
             }
             composable(HomeBottomBarItems.Market.destination) {
-                MarketPage(modifier) {
+                MarketPage(modifier, clickAction = { snackId ->
+                    parentNavigation.navigate("${Destinations.SNACK_DETAIL_PAGE_ROUTE}/$snackId")
+                }) {
                     navController.navigate(SEARCH_PAGE_ROUTE)
                 }
             }
@@ -111,7 +124,7 @@ fun HomePage(
     }
 }
 
-fun isSearchPageOnMarketPage(route:String?,tabRoute:String):Boolean{
+fun isSearchPageOnMarketPage(route: String?, tabRoute: String): Boolean {
     return tabRoute == HomeBottomBarItems.Market.destination
             && route == SEARCH_PAGE_ROUTE
 }

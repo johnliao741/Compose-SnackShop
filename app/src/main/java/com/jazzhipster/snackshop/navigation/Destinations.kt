@@ -1,6 +1,9 @@
 package com.jazzhipster.snackshop.navigation
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -8,7 +11,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.jazzhipster.snackshop.navigation.Destinations.SNACK_DETAIL_PAGE_ROUTE
+import com.jazzhipster.snackshop.presentation.home.HomeDestination
 import com.jazzhipster.snackshop.presentation.home.HomePage
+import com.jazzhipster.snackshop.presentation.home.sub_page.SearchResultDetailPage
 import com.jazzhipster.snackshop.presentation.login.EmailLoginPage
 import com.jazzhipster.snackshop.presentation.login.MainLoginPage
 import com.jazzhipster.snackshop.presentation.login.type.LoginType
@@ -25,6 +31,8 @@ object Destinations {
     const val EMAIL_LOGIN_PAGE_ROUTE = "email_login_page_route"
     //home_route
     const val HOME_PAGE_ROUTE = "home_page_route"
+    //snack_route
+    const val SNACK_DETAIL_PAGE_ROUTE = "snack_detail_route"
 
 }
 
@@ -40,6 +48,7 @@ fun NavGraph(
     ){
         loginGraph(navController)
         homeGraph(navController)
+        snackGraph(navController)
     }
 }
 
@@ -80,9 +89,20 @@ fun NavGraphBuilder.loginGraph(navController: NavController){
 fun NavGraphBuilder.homeGraph(navController: NavController){
     navigation(Destinations.HOME_PAGE_ROUTE, route = Routes.HOME_ROUTE){
         composable(Destinations.HOME_PAGE_ROUTE){
-            HomePage(navAction = {
-
-            })
+            HomePage(parentNavigation = navController)
         }
+    }
+}
+
+fun NavGraphBuilder.snackGraph(navController: NavController){
+    composable("${SNACK_DETAIL_PAGE_ROUTE}/{snackId}") {
+        val snackId = it.arguments?.getString("snackId") ?: ""
+        SearchResultDetailPage(Modifier.fillMaxSize(), snackId,
+            clickAction = { snackId ->
+                navController.navigate("${SNACK_DETAIL_PAGE_ROUTE}/$snackId")
+            }, backAction = {
+                navController.popBackStack()
+            })
+
     }
 }
