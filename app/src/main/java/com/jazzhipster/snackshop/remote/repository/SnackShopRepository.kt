@@ -25,4 +25,12 @@ class SnackShopRepository @Inject constructor(val snackShopService: SnackShopSer
         return snackShopService.getSnackDetail(request)
     }
 
+    suspend fun addShoppingCart(request: AddShoppingCartRequest):AddShoppingCartResponse{
+        return snackShopService.addShoppingCart(request)
+    }
+
+    suspend fun saveWishList(request: SaveWishListRequest):SaveWishListResponse{
+        return snackShopService.saveWishList(request)
+    }
+
 }

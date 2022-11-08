@@ -2,6 +2,7 @@ package com.jazzhipster.snackshop.presentation.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jazzhipster.snackshop.R
@@ -34,16 +36,23 @@ fun MyAppBar(
     title: String? = null,
     showTrailIcon: Boolean = false,
     trailIconAction:(()->Unit)? = null,
-    trailIconRes:Int?= null
+    trailIconRes:Int?= null,
+    clickAction:(() -> Unit)? = null,
+    verticalPadding : Dp = 16.dp,
+    horizontalPadding : Dp = 16.dp
+
 ) {
     var textFieldValue by remember {
         mutableStateOf(TextFieldValue(""))
     }
+    var modifier = Modifier
+        .padding(vertical = verticalPadding, horizontal = horizontalPadding)
+        .fillMaxWidth()
+        .aspectRatio(9.9444f)
+    if(clickAction != null)
+        modifier = modifier.clickable { clickAction?.invoke() }
     Row(
-        Modifier
-            .padding(top = 16.dp)
-            .fillMaxWidth()
-            .aspectRatio(9.9444f),
+        modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (showBackIcon)
@@ -74,6 +83,7 @@ fun MyAppBar(
                 Spacer(modifier = Modifier.width(5.dp))
                 BasicTextField(
                     value = textFieldValue,
+                    enabled = clickAction == null,
                     onValueChange = {
                         textFieldValue = it
                         searchChangeAction?.invoke(textFieldValue.text)

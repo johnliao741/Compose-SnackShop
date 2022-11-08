@@ -260,6 +260,22 @@ class SnackShopServiceImp() : SnackShopService {
             )
         }
 
+    override suspend fun addShoppingCart(request: AddShoppingCartRequest): AddShoppingCartResponse =
+        withContext(Dispatchers.IO){
+            delay(500)
+            AddShoppingCartResponse().apply {
+                status = true
+            }
+        }
+
+    override suspend fun saveWishList(request: SaveWishListRequest): SaveWishListResponse =
+        withContext(Dispatchers.IO){
+            delay(500)
+            SaveWishListResponse().apply {
+                status = true
+            }
+        }
+
     fun Double.getDigit(digit:Int):Double{
         val num = Math.pow(10.0,digit.toDouble())
         return this.run {

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 import com.jazzhipster.snackshop.R
+import com.jazzhipster.snackshop.presentation.common.MyAppBar
 
 import com.jazzhipster.snackshop.presentation.common.ShowView
 import com.jazzhipster.snackshop.presentation.common.SnackCard
@@ -43,36 +44,14 @@ fun MarketPage(modifier: Modifier,
     ShowView(result){data->
         Scaffold(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(vertical = 16.dp),
+                .fillMaxSize(),
             topBar = {
-                Row(
-                    Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth()
-                        .aspectRatio(9.9444f)
-                        .background(
-                            LighterGray
-                        ).padding(horizontal = 16.dp)
-                        .clickable { searchAction() },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    var search by remember {
-                        mutableStateOf(TextFieldValue(""))
-                    }
-                    Image(painter = painterResource(id = R.mipmap.search), contentDescription = "search")
-                    Spacer(modifier = Modifier.width(5.dp))
-                    BasicTextField(
-                        value = search,
-                        onValueChange = {search = it},
-                        modifier = Modifier.fillMaxWidth(),
-                        textStyle = TextStyle(fontSize = 17.sp,textAlign = TextAlign.Start),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        maxLines = 1,
-                        visualTransformation = VisualTransformation.None,
-                        enabled = false
-                    )
-                }
+                MyAppBar(
+                    backAction = {},
+                    showBackIcon = false,
+                    showSearchBar = true,
+                    clickAction = searchAction
+                )
             }
         ) { paddingValues->
             LazyColumn(modifier = Modifier

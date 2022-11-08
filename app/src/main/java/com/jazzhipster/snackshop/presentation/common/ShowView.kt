@@ -19,6 +19,9 @@ fun <T> ShowView(
     }
     Log.e("status","Loading")
     when (val result = state.value) {
+        is Result.Initial->{
+
+        }
         is Result.Loading -> {
             showLoadingDialog = true
             Log.e("status","Loading")
@@ -32,5 +35,6 @@ fun <T> ShowView(
             showLoadingDialog = false
         }
 
+        else -> {}
     }
 }

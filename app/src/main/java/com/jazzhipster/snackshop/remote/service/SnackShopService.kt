@@ -13,4 +13,8 @@ interface SnackShopService {
     suspend fun getSearchList(request: GetSearchRequest):GetSearchListResponse
 
     suspend fun getSnackDetail(request: GetSnackDetailRequest):GetSnackDetailResponse
+
+    suspend fun addShoppingCart(request: AddShoppingCartRequest):AddShoppingCartResponse
+
+    suspend fun saveWishList(request: SaveWishListRequest):SaveWishListResponse
 }

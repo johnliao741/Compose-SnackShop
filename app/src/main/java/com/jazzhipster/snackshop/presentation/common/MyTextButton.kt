@@ -2,7 +2,6 @@ package com.jazzhipster.snackshop.presentation.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -22,21 +21,22 @@ import com.jazzhipster.snackshop.ui.theme.LightGray
 
 @Composable
 fun MyTextButton(
-    navAction: () -> Unit,
+    clickAction: () -> Unit,
     enable: Boolean = true,
     modifier: Modifier,
     text: String,
     textColor: Color,
-    fontSize: TextUnit = 17.sp
+    fontSize: TextUnit = 17.sp,
+    background: Color = MaterialTheme.colors.primary
 ) {
     TextButton(
         onClick = {
-            navAction()
+            clickAction()
         },
         enabled = enable,
         modifier = modifier
             .background(
-                color = if (enable) MaterialTheme.colors.primary
+                color = if (enable) background
                 else Color.Gray, shape = RoundedCornerShape(8.dp)
             )
     ) {
@@ -47,7 +47,7 @@ fun MyTextButton(
 
 @Composable
 fun MyIconButton(
-    navAction: () -> Unit,
+    clickAction: () -> Unit,
     enable: Boolean = true,
     modifier: Modifier,
     text: String,
@@ -61,7 +61,7 @@ fun MyIconButton(
 ) {
 
     Button(
-        onClick = { navAction() },
+        onClick = { clickAction() },
         modifier = modifier,
         enabled = enable,
         colors = ButtonDefaults.buttonColors(background),
@@ -91,7 +91,7 @@ fun MyIconButton(
 @Composable
 fun previewMyIconButton() {
     MyIconButton(
-        navAction = {  },
+        clickAction = {  },
         modifier = Modifier.fillMaxWidth(),
         text ="Click",
         textColor = MaterialTheme.colors.primary,
@@ -105,7 +105,7 @@ fun previewMyIconButton() {
 @Composable
 fun PreviewMyTextButton() {
     MyTextButton(
-        navAction = { /*TODO*/ },
+        clickAction = { /*TODO*/ },
         modifier = Modifier.fillMaxWidth(),
         text = "Click",
         textColor = Color.White

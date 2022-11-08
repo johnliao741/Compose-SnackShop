@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jazzhipster.snackshop.R
 import com.jazzhipster.snackshop.presentation.common.IconText
+import com.jazzhipster.snackshop.presentation.common.MyAppBar
 import com.jazzhipster.snackshop.presentation.common.ShowView
 import com.jazzhipster.snackshop.presentation.common.VerticalLine
 import com.jazzhipster.snackshop.remote.model.GetSearchListResponse
@@ -54,9 +55,6 @@ fun SearchPage(
     backAction: () -> Unit,
     searchViewModel: SearchViewModel = hiltViewModel()
 ) {
-    var search by remember {
-        mutableStateOf(TextFieldValue(""))
-    }
     LaunchedEffect(key1 = true) {
         searchViewModel.getSearchList("", true)
     }
@@ -65,52 +63,14 @@ fun SearchPage(
     ShowView(state = searchList) { data ->
         Scaffold(
             topBar = {
-                Row(
-                    Modifier
-                        .padding(top = 16.dp)
-                        .fillMaxWidth()
-                        .aspectRatio(9.9444f),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { backAction() }) {
-                        Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
-                            contentDescription = "back",
-                            tint = Color.Black
-
-                        )
+                MyAppBar(
+                    backAction = {},
+                    showBackIcon = false,
+                    showSearchBar = true,
+                    searchChangeAction = {search->
+                        searchViewModel.getSearchList(search)
                     }
-                    Row(
-                        Modifier
-                            .padding(end = 16.dp)
-                            .fillMaxWidth()
-                            .aspectRatio(9.9444f)
-                            .background(
-                                LighterGray
-                            )
-                            .padding(horizontal = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.mipmap.search),
-                            contentDescription = "search"
-                        )
-                        Spacer(modifier = Modifier.width(5.dp))
-                        BasicTextField(
-                            value = search,
-                            onValueChange = {
-                                search = it
-                                searchViewModel.getSearchList(search.text)
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            textStyle = TextStyle(fontSize = 17.sp, textAlign = TextAlign.Start),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                            maxLines = 1,
-                            visualTransformation = VisualTransformation.None,
-                        )
-                    }
-
-                }
+                )
             }
         ) {
             LazyColumn(
@@ -157,7 +117,9 @@ fun LazyListScope.NoSearchResult() {
                     }
                 }
             )
-            VerticalLine(modifier = Modifier.fillMaxWidth().background(LightGray))
+            VerticalLine(modifier = Modifier
+                .fillMaxWidth()
+                .background(LightGray))
             Image(
                 painter = painterResource(id = R.mipmap.variant1),
                 contentDescription = "",
@@ -187,7 +149,9 @@ fun LazyListScope.SearchResultCards(data: GetSearchListResponse) {
                         .padding(vertical = 17.dp)
                         .fillMaxWidth()
                 )
-                VerticalLine(modifier = Modifier.fillMaxWidth().background(LightGray))
+                VerticalLine(modifier = Modifier
+                    .fillMaxWidth()
+                    .background(LightGray))
             }
         }
     }
@@ -213,7 +177,9 @@ fun LazyListScope.SearchDefaultCards(data: GetSearchListResponse) {
                             .fillMaxWidth()
 
                     )
-                    VerticalLine(modifier = Modifier.fillMaxWidth().background(LightGray))
+                    VerticalLine(modifier = Modifier
+                        .fillMaxWidth()
+                        .background(LightGray))
                 }
 
             }
@@ -238,7 +204,9 @@ fun LazyListScope.SearchDefaultCards(data: GetSearchListResponse) {
                             .fillMaxWidth()
 
                     )
-                    VerticalLine(modifier = Modifier.fillMaxWidth().background(LightGray))
+                    VerticalLine(modifier = Modifier
+                        .fillMaxWidth()
+                        .background(LightGray))
                 }
 
             }

@@ -2,30 +2,32 @@ package com.jazzhipster.snackshop.presentation.home.sub_page
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 import coil.compose.AsyncImage
 import com.jazzhipster.snackshop.R
 import com.jazzhipster.snackshop.presentation.common.*
 import com.jazzhipster.snackshop.remote.model.beforeTime
+import com.jazzhipster.snackshop.remote.result.Result
 import com.jazzhipster.snackshop.ui.theme.Gray
 import com.jazzhipster.snackshop.ui.theme.LightGray
-import com.jazzhipster.snackshop.ui.theme.LighterGray
 
+@ExperimentalLifecycleComposeApi
 @Composable
 fun SearchResultDetailPage(
     modifier: Modifier,
@@ -36,8 +38,57 @@ fun SearchResultDetailPage(
 ) {
 
     val snackDetail = viewModel.getSnackDetailLiveData.observeAsState()
+    val addShoppingCart = viewModel.addShoppingCartFlow.collectAsStateWithLifecycle(Result.Initial)
+    val saveWishList = viewModel.saveWishListFlow.collectAsStateWithLifecycle(Result.Initial)
     LaunchedEffect(key1 = true) {
         viewModel.getSnackDetail(snackId)
+    }
+    ShowView(state = addShoppingCart) {
+        val dialogState: MutableState<Boolean> = remember {
+            mutableStateOf(true)
+        }
+        if(dialogState.value){
+            AlertDialog(
+                onDismissRequest = { dialogState.value = false },
+                title = {
+                    Box(Modifier.fillMaxWidth())
+                },
+                text = {
+                    Text(modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, text = "Success", color = Color.Black)
+                },
+                buttons = {
+                    TextButton(modifier = Modifier.fillMaxWidth(),onClick = { dialogState.value = false }) {
+                        Text(text = "Ok")
+                    }
+                },
+                shape = RoundedCornerShape(8.dp),
+                backgroundColor = Color.White
+            )
+        }
+
+    }
+    ShowView(state = saveWishList) {
+        val dialogState: MutableState<Boolean> = remember {
+            mutableStateOf(true)
+        }
+        if(dialogState.value){
+            AlertDialog(
+                onDismissRequest = { dialogState.value = false },
+                title = {
+                        Box(Modifier.fillMaxWidth())
+                },
+                text = {
+                    Text(modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center,text = "Success", color = Color.Black)
+                },
+                buttons = {
+                    TextButton(modifier = Modifier.fillMaxWidth(),onClick = { dialogState.value = false }) {
+                        Text(modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center,text = "Ok")
+                    }
+                },
+                shape = RoundedCornerShape(8.dp),
+                backgroundColor = Color.White
+            )
+        }
     }
     ShowView(state = snackDetail) { data ->
         Scaffold(
@@ -45,7 +96,8 @@ fun SearchResultDetailPage(
                 MyAppBar(
                     backAction = { backAction()},
                     showBackIcon = true,
-                    title = "Search result detail"
+                    title = "Search result detail",
+                    horizontalPadding = 0.dp
                 )
             }
         ) { paddingValues ->
@@ -98,8 +150,11 @@ fun SearchResultDetailPage(
                 SnackCard(data = data.recommended, clickAction = clickAction)
                 Spacer(modifier = Modifier.height(24.dp))
                 MyIconButton(
-                    navAction = {},
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    clickAction = {
+                        viewModel.addShoppingCart(snackId)
+                    },
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
                         .fillMaxWidth()
                         .aspectRatio(6.3928f),
                     text = "Add to shopping cart",
@@ -111,7 +166,9 @@ fun SearchResultDetailPage(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 MyIconButton(
-                    navAction = {},
+                    clickAction = {
+                        viewModel.saveWishList(snackId)
+                    },
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .fillMaxWidth()
